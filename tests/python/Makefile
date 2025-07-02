@@ -15,6 +15,7 @@ passing_tests:
 	@$(EQY) -f counter_cells.eqy 2>&1 | grep -i "counter.state__SDFF_PP0__Q" # matching cells
 	@$(EQY) - < counter.eqy 2>&1 | grep -i "Cannot derive workdir name from config file name" # stdin
 	@$(EQY) -f counter.eqy --setup | grep -i "DONE (UNKNOWN, rc=0)" # setup only
+	@$(EQY) -f failed_partition.eqy > /dev/null
 
 failing_tests:
 	@$(EQY) 2>&1 | grep -i "No config file given"
@@ -46,7 +47,6 @@ failing_tests:
 	@$(EQY) -f expected_opt_bool_on_off.eqy 2>&1 | grep -i "expected one of"
 	@$(EQY) -f expected_opt_int_integer.eqy 2>&1 | grep -i "expected integer option"
 	@$(EQY) -f unknown_opt_other.eqy 2>&1 | grep -i "unknown option 'unknown'"
-	@$(EQY) -f failed_partition.eqy 2>&1 | grep -i "Failed to partition design."
 	@$(EQY) -f equivalence_problem.eqy 2>&1 | grep -i "A problem occurred during equivalence check."
 	@$(EQY) -f problem_occured.eqy 2>&1 | grep -i "No configured strategy supports partition"
 	@$(EQY) -f missing_gate_section.eqy 2>&1 | grep -i "section \[gate\] missing"

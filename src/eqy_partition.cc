@@ -122,7 +122,10 @@ struct EqyPartitionWorker
 			SigBit firstBit;
 			bool foundFirstBit = false;
 			for (int i = 1; i < GetSize(rule); i++) {
-				SigSpec sig = gold_sigmap(gold->wire("\\" + rule[i]));
+				auto wire = gold->wire("\\" + rule[i]);
+				if (wire == nullptr)
+					continue;
+				SigSpec sig = gold_sigmap(wire);
 				sig.remove_const();
 				for (auto bit : sig) {
 					if (!queue.count(bit))
@@ -140,14 +143,20 @@ struct EqyPartitionWorker
 		}
 
 		if (rule[0] == "bind" && GetSize(rule) == 2) {
-			for (SigBit bit : gold_sigmap(gold->wire("\\" + rule[1])))
+			auto wire = gold->wire("\\" + rule[1]);
+			if (wire == nullptr)
+				return;
+			for (SigBit bit : gold_sigmap(wire))
 				if (gold_drivers.count(bit))
 					bind_database.insert(bit);
 			return;
 		}
 
 		if (rule[0] == "solo" && GetSize(rule) == 2) {
-			for (SigBit bit : gold_sigmap(gold->wire("\\" + rule[1])))
+			auto wire = gold->wire("\\" + rule[1]);
+			if (wire == nullptr)
+				return;
+			for (SigBit bit : gold_sigmap(wire))
 				solo_database.insert(bit);
 			return;
 		}
